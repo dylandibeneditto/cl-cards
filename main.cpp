@@ -35,28 +35,15 @@ bool confirmExit() {
   return (exitChoice == 'y' || exitChoice == 'Y');
 }
 
-void studyFlashcards(const std::vector<Flashcard>& flashcards) {
-  if (flashcards.empty()) {
-    std::cout << "No flashcards available. Please add some flashcards first."
-              << std::endl;
-    return;
-  }
-  // Implementation of studying flashcards
-}
-
 std::vector<std::string> getSetFiles() {
   std::vector<std::string> setFiles;
-  std::filesystem::path exePath =
-      std::filesystem::current_path();  // Get the directory of the executable
+  std::filesystem::path exePath = std::filesystem::current_path();
 
-  // Iterate through the directory entries
   for (const auto& entry : std::filesystem::directory_iterator(exePath)) {
     if (entry.is_regular_file() && entry.path().extension() == ".set") {
-      setFiles.push_back(
-          entry.path().stem().string());  // Get filename without extension
+      setFiles.push_back(entry.path().stem().string());
     }
   }
-
   return setFiles;
 }
 
@@ -66,17 +53,15 @@ std::vector<Flashcard> readSet(std::vector<Flashcard>& flashcards,
   if (!infile) {
     std::cerr << "Unable to open file: " << file << std::endl;
     return flashcards;
-  } else {
-    std::cout << "flashcards are now set to: " << file << std::endl;
   }
 
-  // Read the whole file into a string
+  std::cout << "Flashcards are now set to: " << file << std::endl;
+
   std::stringstream buffer;
   buffer << infile.rdbuf();
   std::string fileContent = buffer.str();
   infile.close();
 
-  // Parse the string to extract flashcards
   std::istringstream iss(fileContent);
   std::string token;
   while (std::getline(iss, token, ';')) {
@@ -88,13 +73,26 @@ std::vector<Flashcard> readSet(std::vector<Flashcard>& flashcards,
       flashcards.push_back(fc);
     }
   }
-
   return flashcards;
+}
+std::vector<Flashcard> changeSet(std::vector<Flashcard> flashcards) {
+  std::string file;
+  std::cout << "Found sets in this directory" << std::endl;
+  for (const auto& pf : getSetFiles()) {
+    std::cout << "> " << pf << std::endl;
+  }
+  std::cin >> file;
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  file += ".set";
+
+  return readSet(flashcards, file);
 }
 
 int main() {
   std::vector<Flashcard> flashcards;
   bool exit = false;
+  clearScreen();
+  flashcards = changeSet(flashcards);
 
   while (!exit) {
     clearScreen();
@@ -111,16 +109,7 @@ int main() {
       }
     } else if (cmd == "cs") {
       clearScreen();
-      std::string file;
-      std::cout << "found sets in this directory" << std::endl;
-      for (const auto& pf : getSetFiles()) {
-        std::cout << "> " << pf << std::endl;
-      }
-      std::cin >> file;
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-      file += ".set";  // Append the ".set" extension
-
-      flashcards = readSet(flashcards, file);
+      flashcards = changeSet(flashcards);
 
     } else if (cmd == "list") {
       for (const auto& card : flashcards) {
