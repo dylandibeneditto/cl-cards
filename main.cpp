@@ -107,7 +107,7 @@ int main() {
       if (confirmExit()) {
         exit = true;
       }
-    } else if (cmd == "cs") {
+    } else if (cmd == "cset") {
       clearScreen();
       flashcards = changeSet(flashcards);
 
