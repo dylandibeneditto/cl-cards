@@ -1,12 +1,15 @@
 import os
+import glob
+from algorithms import a
 
 currentSet = "main.set"
-currentAlg = "flashcard"
+currentAlg = "flashcards"
 currentCmd = None
 
 def header():
     global currentCmd, currentSet, currentAlg
     print(f'{f" ${currentCmd}" if currentCmd else f"{currentSet} > {currentAlg}"}'.center(os.get_terminal_size().columns))
+    a[currentAlg]("hello")
 
 def clear():
     os.system('cls' if os.name == "nt" else "clear")
@@ -14,6 +17,8 @@ def clear():
 
 def cset(newSet):
     global currentSet
+    if newSet.endswith(".set") == False:
+        newSet += ".set"
     currentSet = newSet
 
 def calg(newAlg):
@@ -31,10 +36,13 @@ def main():
             print("cset: change set\ncalg: change algorithm")
 
         elif cmd == "cset":
-            newSet = input("Enter new set: ")
-            cset(newSet)
+            files = glob.glob("./*.set")
+            print("\n".join(files) if len(files)>0 else "You don't have any sets")
+            if len(files)>0:
+                newSet = input("?: ")
+                cset(newSet)
         elif cmd == "calg":
-            newAlg = input("Enter new algorithm: ")
+            newAlg = input("?: ")
             calg(newAlg)
         else:
             print("unknown command:", cmd)
