@@ -102,6 +102,7 @@ class WrittenAlgorithm:
             self.displayCheck(params, True)
         else:
             self.displayCheck(params, False)
+            
         input("[ enter ]")
         
         # Check if all cards have been answered correctly

@@ -82,9 +82,14 @@ def cset(newSet):
     global currentSet, flashcardsData, currentIndex
     if not newSet.endswith(".set"):
         newSet += ".set"
-    currentSet = newSet
-    flashcardsData = load_set(newSet)  # Load the new set of flashcards
-    currentIndex = 0  # Reset the current index
+    files = glob.glob("./*.set")
+    files = list(map(lambda i: i[2:], files))
+    if newSet in files:
+        currentSet = newSet
+        flashcardsData = load_set(newSet)  # Load the new set of flashcards
+        currentIndex = 0  # Reset the current index
+    else:
+        print(f"Set '{newSet}' not found.")
 
 def calg(newAlg):
     """
