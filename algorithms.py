@@ -25,10 +25,13 @@ class FlashcardsAlgorithm:
         next_index = params['index']
         if params['user_input'] == 'n':
             next_index = (params['index'] + 1) % len(params['data'])
+            self.flipped = 0
         elif params['user_input'] == 'b':
             next_index = (params['index'] - 1) % len(params['data'])
+            self.flipped = 0
         elif params['user_input'] == 'f':
             self.flipped = 1-self.flipped
+        
         return next_index
 
 

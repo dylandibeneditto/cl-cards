@@ -29,7 +29,6 @@ def run():
     currentAlgorithmInstance.initialDisplay()
     while(user_input != "exit"):
         user_input = input()
-        clear()
         params = {
             'index': currentIndex,
             'data': flashcardsData,
@@ -37,7 +36,14 @@ def run():
             'user_input': user_input
         }
         currentIndex = currentAlgorithmInstance.logic(params)
-        currentAlgorithmInstance.display(params)
+        clear()
+        paramsD = {
+            'index': currentIndex,
+            'data': flashcardsData,
+            'currentCard': flashcardsData[currentIndex],
+            'user_input': user_input
+        }
+        currentAlgorithmInstance.display(paramsD)
     currentlyRunning = False
 
 def clear():
