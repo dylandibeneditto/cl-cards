@@ -25,6 +25,13 @@ def header():
     else:
         header_str = f"{currentSet} > {currentAlg}"
     print(header_str.center(os.get_terminal_size().columns))
+    # progress bar
+    if currentlyRunning:
+        total_width = os.get_terminal_size().columns - 2
+        progress_width = int((total_width / len(flashcardsData)) * (currentIndex+1))
+        result = "[" + "-" * progress_width + " " * (total_width - progress_width) + "]"
+        print(result)
+
 
 def run():
     """
