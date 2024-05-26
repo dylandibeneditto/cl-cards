@@ -10,5 +10,4 @@ def load_set(set_file):
     for card in cards:
         if betweenSide in card:
             result.append(card.split(betweenSide, 1)) 
-            print(result)
     return result
