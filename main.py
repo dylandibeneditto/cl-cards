@@ -78,13 +78,15 @@ def main():
 
         elif cmd == "cset":
             files = glob.glob("./*.set")
-            print("\n".join(files) if files else "You don't have any sets")
+            print("\n".join(files) if files else "You don't have any other sets")
             if files:
-                newSet = input("Enter new set: ")
+                newSet = input("?: ")
                 cset(newSet)
         elif cmd == "calg":
-            newAlg = input("Enter new algorithm: ")
-            calg(newAlg)
+            print("\n".join(algorithms) if len(algorithms)>1 else "You don't have any other algorithms")
+            if len(algorithms)>1:
+                newAlg = input("?: ")
+                calg(newAlg)
         elif cmd == "run":
             currentlyRunning = True
             run()
