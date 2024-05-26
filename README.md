@@ -111,7 +111,7 @@ algorithms = {
 
 ## Contributing
 
-We welcome contributions! If you have ideas for new features or improvements, feel free to submit a pull request. Please follow the guidelines in the [CONTRIBUTING](./CONTRIBUTING) file.
+We welcome contributions! If you have ideas for new features or improvements, feel free to submit a pull request. Please follow the guidelines in the [CONTRIBUTIONS](./CONTRIBUTIONS.md) file.
 
 ## License
 
