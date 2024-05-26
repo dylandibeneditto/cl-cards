@@ -4,7 +4,7 @@ from algorithms import algorithms
 from load import load_set
 
 # Initialize variables
-currentSet = "main.set"  # Default set
+currentSet = "help.set"  # Default set
 currentAlg = "flashcards"  # Default algorithm
 currentCmd = None
 currentlyRunning = False
@@ -40,6 +40,8 @@ def run():
         'user_input': user_input
     }
     currentAlgorithmInstance.initialDisplay(params)  # Display initial message for the algorithm
+    clear()
+    currentAlgorithmInstance.display(params)
     while(user_input != "exit"):
         user_input = input()
         params = {
@@ -99,8 +101,7 @@ def main():
         clear()
 
         if cmd == "help":
-            print("cset: change set\n\tleads to a menu in order to change your working set\n\ncalg: change algorithm\n\tleads to a menu in order to change your working algorithm\n\nrun: start running the flashcards\n\tstarts the study session based on your working algorithm and set\n\n")
-
+            print("\ncset: change set\n\tleads to a menu in order to change your working set to any '.set' file in the app directory\n\ncalg: change algorithm\n\tleads to a menu in order to change your working algorithm to any algorithm in the 'algorithm.py' file\n\nrun: start running the flashcards\n\tstarts the study session based on your working algorithm and set\n\nlist: lists all cards\n\tlists every parsed card from using the 'load.py' file\n")
         elif cmd == "cset":
             files = glob.glob("./*.set")
             print("\n".join(files) if files else "You don't have any other sets")

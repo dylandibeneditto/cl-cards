@@ -1,0 +1,5 @@
+calg:shows a menu to change to any connected algorithm within the 'algorithms.py' file;
+cset:shows a menu to change your working set to any file with the '.set' extension in the app directory;
+run:starts the study session based off your working algorithm and working set;
+list:lists every parsed card;
+how do I change the seperators in my '.set' files?:by accessing the 'load.py' file and switching the characters in lines 2 and 3

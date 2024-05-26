@@ -48,6 +48,7 @@ class FlashcardsAlgorithm:
         print("- `n` | move to next card")
         print("- `b` | move back one card")
         print("- `f` | flip card")
+        input("- `exit` | ends the session\n[ enter to start ]")
         
     def display(self, params):
         # Display the current side of the card
@@ -75,12 +76,10 @@ class WrittenAlgorithm:
     
     def initialDisplay(self, params):
         # Display the initial message and commands for the written algorithm
-        print("Written study")
         print("type your answer to the question")
         
         # Get user input to start the session
         input("- `exit` | ends the session\n[ enter to start ]")
-        self.display(params)
         
     def display(self, params):
         # Display the current progress and the front of the card
@@ -91,9 +90,10 @@ class WrittenAlgorithm:
         
     def displayCheck(self, params, result):
         # Display whether the user's answer was correct or incorrect
-        print("Correct!" if result else "Incorrect.")
-        print(f"You said {params['user_input']}")
-        print(f"The answer was {params['currentCard'][1]}")
+        print("\n")
+        print(("✅ Correct! ✅" if result else "❌ Incorrect. ❌").center(os.get_terminal_size().columns))
+        print(f"you: {params['user_input']}")
+        print(f"answer: {params['currentCard'][1]}")
 
     def logic(self, params):
         # Process the user's input and update the state accordingly
