@@ -111,6 +111,7 @@ def main():
             print("\ncset: change set\n\tleads to a menu in order to change your working set to any '.set' file in the app directory\n\ncalg: change algorithm\n\tleads to a menu in order to change your working algorithm to any algorithm in the 'algorithm.py' file\n\nrun: start running the flashcards\n\tstarts the study session based on your working algorithm and set\n\nlist: lists all cards\n\tlists every parsed card from using the 'load.py' file\n")
         elif cmd == "cset":
             files = glob.glob("./*.set")
+            files = list(map(lambda i: i[2:], files))
             print("\n".join(files) if files else "You don't have any other sets")
             if files:
                 newSet = input("?: ")
