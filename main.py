@@ -1,72 +1,64 @@
 import os
 import glob
+from termcolor import colored, cprint
 from algorithms import algorithms
 from load import load_set
 
 # Initialize variables
-currentSet = "help.set"  # Default set
-currentAlg = "flashcards"  # Default algorithm
-currentCmd = None
-currentlyRunning = False
-currentIndex = 0
-flashcardsData = load_set(currentSet)  # Load the initial set of flashcards
-currentAlgorithmInstance = algorithms[currentAlg]()  # Instantiate the default algorithm
+current_set = "help.set"  # Default set
+current_algorithm = "flashcards"  # Default algorithm
+current_command = None
+currently_running = False
+current_index = 0
+flashcards_data = load_set(current_set)  # Load the initial set of flashcards
+current_algorithm_instance = algorithms[current_algorithm]()  # Instantiate the default algorithm
 
 def header():
     """
     Display the header information based on the current state.
     """
-    global currentCmd, currentSet, currentAlg, currentIndex, currentlyRunning
-    header_str = f'{f" ${currentCmd}" if currentCmd else f""}'
-    if currentlyRunning:
-        header_str = f"{currentSet} | {currentIndex+1} / {len(flashcardsData)}"
-    elif currentCmd:
-        header_str = f" ${currentCmd}"
-    else:
-        header_str = f"{currentSet} > {currentAlg}"
-    print(header_str.center(os.get_terminal_size().columns))
-    # progress bar
-    if currentlyRunning:
+    global current_command, current_set, current_algorithm, current_index, currently_running
+    header_str = f' ${current_command}' if current_command else f'{current_set} > {current_algorithm}'
+    if currently_running:
+        header_str = f"{current_set} | {current_index + 1} / {len(flashcards_data)}"
+    
+    cprint(header_str.center(os.get_terminal_size().columns), 'cyan')
+    
+    # Display progress bar
+    if currently_running:
         total_width = os.get_terminal_size().columns - 2
-        progress_width = int((total_width / len(flashcardsData)) * (currentIndex+1))
-        result = "[" + "-" * progress_width + " " * (total_width - progress_width) + "]"
-        print(result)
-
+        progress_width = int((total_width / len(flashcards_data)) * (current_index + 1))
+        progress_bar = "[" + "-" * progress_width + " " * (total_width - progress_width) + "]"
+        cprint(progress_bar, 'green')
 
 def run():
     """
     Main loop for running the current algorithm on the flashcards.
     """
-    global currentIndex, currentlyRunning
+    global current_index, currently_running
     user_input = ""
     clear()
     params = {
-        'index': currentIndex,
-        'data': flashcardsData,
-        'currentCard': flashcardsData[currentIndex],
+        'index': current_index,
+        'data': flashcards_data,
+        'currentCard': flashcards_data[current_index],
         'user_input': user_input
     }
-    currentAlgorithmInstance.initialDisplay(params)  # Display initial message for the algorithm
+    
+    current_algorithm_instance.initialDisplay(params)  # Display initial message for the algorithm
     clear()
-    currentAlgorithmInstance.display(params)
-    while(user_input != "exit"):
+    current_algorithm_instance.display(params)
+    
+    while user_input != "exit":
         user_input = input()
-        params = {
-            'index': currentIndex,
-            'data': flashcardsData,
-            'currentCard': flashcardsData[currentIndex],
-            'user_input': user_input
-        }
-        currentIndex = currentAlgorithmInstance.logic(params)  # Get next index based on user input
+        params['user_input'] = user_input
+        current_index = current_algorithm_instance.logic(params)  # Get next index based on user input
         clear()
-        paramsD = {
-            'index': currentIndex,
-            'data': flashcardsData,
-            'currentCard': flashcardsData[currentIndex],
-            'user_input': user_input
-        }
-        currentAlgorithmInstance.display(paramsD)  # Display the current flashcard
-    currentlyRunning = False
+        params['index'] = current_index
+        params['currentCard'] = flashcards_data[current_index]
+        current_algorithm_instance.display(params)  # Display the current flashcard
+    
+    currently_running = False
 
 def clear():
     """
@@ -75,71 +67,81 @@ def clear():
     os.system('cls' if os.name == "nt" else "clear")
     header()
 
-def cset(newSet):
+def change_set(new_set):
     """
     Change the current set of flashcards.
     """
-    global currentSet, flashcardsData, currentIndex
-    if not newSet.endswith(".set"):
-        newSet += ".set"
+    global current_set, flashcards_data, current_index
+    if not new_set.endswith(".set"):
+        new_set += ".set"
     files = glob.glob("./*.set")
-    files = list(map(lambda i: i[2:], files))
-    if newSet in files:
-        currentSet = newSet
-        flashcardsData = load_set(newSet)  # Load the new set of flashcards
-        currentIndex = 0  # Reset the current index
+    files = [file[2:] for file in files]
+    if new_set in files:
+        current_set = new_set
+        flashcards_data = load_set(new_set)  # Load the new set of flashcards
+        current_index = 0  # Reset the current index
     else:
-        print(f"Set '{newSet}' not found.")
+        cprint(f"Set '{new_set}' not found.", 'red')
 
-def calg(newAlg):
+def change_algorithm(new_algorithm):
     """
     Change the current algorithm.
     """
-    global currentAlg, currentAlgorithmInstance
-    if newAlg in algorithms:
-        currentAlgorithmInstance = algorithms[newAlg]()  # Instantiate the new algorithm
-        currentAlg = newAlg
+    global current_algorithm, current_algorithm_instance
+    if new_algorithm in algorithms:
+        current_algorithm_instance = algorithms[new_algorithm]()  # Instantiate the new algorithm
+        current_algorithm = new_algorithm
     else:
-        print(f"Algorithm '{newAlg}' not found.")
+        cprint(f"Algorithm '{new_algorithm}' not found.", 'red')
 
 def main():
     """
     Main loop for handling user commands.
     """
-    global currentCmd, currentlyRunning
+    global current_command, currently_running
     while True:
-        cmd = input("> ")
-        currentCmd = cmd
+        cmd = input(colored("> ", 'yellow'))
+        current_command = cmd
         clear()
 
         if cmd == "help":
-            print("\ncset: change set\n\tleads to a menu in order to change your working set to any '.set' file in the app directory\n\ncalg: change algorithm\n\tleads to a menu in order to change your working algorithm to any algorithm in the 'algorithm.py' file\n\nrun: start running the flashcards\n\tstarts the study session based on your working algorithm and set\n\nlist: lists all cards\n\tlists every parsed card from using the 'load.py' file\n")
+            help_text = (
+                "\ncset: change set\n\tChange your working set to any '.set' file in the app directory"
+                "\ncalg: change algorithm\n\tChange your working algorithm to any algorithm in the 'algorithm.py' file"
+                "\nrun: start running the flashcards\n\tStart the study session based on your working algorithm and set"
+                "\nlist: lists all cards\n\tList every parsed card from using the 'load.py' file\n"
+            )
+            cprint(help_text, 'blue')
         elif cmd == "cset":
             files = glob.glob("./*.set")
-            files = list(map(lambda i: i[2:], files))
-            print("\n".join(files) if files else "You don't have any other sets")
+            files = [file[2:] for file in files]
             if files:
-                newSet = input("?: ")
-                cset(newSet)
+                cprint("\n".join(files), 'green')
+                new_set = input(colored("?: ", 'yellow'))
+                change_set(new_set)
+            else:
+                cprint("You don't have any other sets", 'red')
         elif cmd == "calg":
-            print("\n".join(algorithms) if len(algorithms) > 1 else "You don't have any other algorithms")
             if len(algorithms) > 1:
-                newAlg = input("?: ")
-                calg(newAlg)
+                cprint("\n".join(algorithms), 'green')
+                new_algorithm = input(colored("?: ", 'yellow'))
+                change_algorithm(new_algorithm)
+            else:
+                cprint("You don't have any other algorithms", 'red')
         elif cmd == "run":
-            currentlyRunning = True
+            currently_running = True
             run()
         elif cmd == "list":
             # List all flashcards in the current set
-            for card in flashcardsData:
-                print(f"\nfront: {card[0]}")
-                print(f"back: {card[1]}")
+            for card in flashcards_data:
+                cprint(f"\nfront: {card[0]}", 'yellow')
+                cprint(f"back: {card[1]}", 'yellow')
             print("")
         else:
-            print(f"Unknown command: {cmd}")
+            cprint(f"Unknown command: {cmd}", 'red')
 
-        currentCmd = None
-        input("[ enter ]")
+        current_command = None
+        input(colored("[ enter ]", 'yellow'))
         clear()
 
 clear()
