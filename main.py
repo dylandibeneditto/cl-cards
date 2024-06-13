@@ -22,14 +22,14 @@ def header():
     if currently_running:
         header_str = f"{current_set} | {current_index + 1} / {len(flashcards_data)}"
     
-    cprint(header_str.center(os.get_terminal_size().columns), 'cyan')
+    cprint(header_str.center(os.get_terminal_size().columns), 'magenta')
     
     # Display progress bar
     if currently_running:
         total_width = os.get_terminal_size().columns - 2
         progress_width = int((total_width / len(flashcards_data)) * (current_index + 1))
         progress_bar = "[" + "-" * progress_width + " " * (total_width - progress_width) + "]"
-        cprint(progress_bar, 'green')
+        cprint(progress_bar, 'dark_grey')
 
 def run():
     """
@@ -52,11 +52,12 @@ def run():
     while user_input != "exit":
         user_input = input()
         params['user_input'] = user_input
-        current_index = current_algorithm_instance.logic(params)  # Get next index based on user input
-        clear()
-        params['index'] = current_index
-        params['currentCard'] = flashcards_data[current_index]
-        current_algorithm_instance.display(params)  # Display the current flashcard
+        if user_input != "exit":
+            current_index = current_algorithm_instance.logic(params)  # Get next index based on user input
+            clear()
+            params['index'] = current_index
+            params['currentCard'] = flashcards_data[current_index]
+            current_algorithm_instance.display(params)  # Display the current flashcard
     
     currently_running = False
 

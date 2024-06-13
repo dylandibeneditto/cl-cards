@@ -69,13 +69,12 @@ class WrittenAlgorithm:
 
     def logic(self, params):
         # Process the user's input and update the state accordingly
-        if params['user_input'] != "exit":
-            if params['user_input'] == params['currentCard'][1]:
-                self.correct.append(params['index'])  # Add to correct list if the answer is correct
-                self.displayCheck(params, True)
-            else:
-                self.displayCheck(params, False)
-            input("[ enter ]")
+        if params['user_input'] == params['currentCard'][1]:
+            self.correct.append(params['index'])  # Add to correct list if the answer is correct
+            self.displayCheck(params, True)
+        else:
+            self.displayCheck(params, False)
+        input("[ enter ]")
             
         
         # Check if all cards have been answered correctly
