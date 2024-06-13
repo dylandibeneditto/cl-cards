@@ -101,7 +101,7 @@ def main():
     """
     global current_command, currently_running
     while True:
-        cmd = input(colored("> ", 'yellow'))
+        cmd = input(colored("> ", 'dark_grey'))
         current_command = cmd
         clear()
 
@@ -117,15 +117,15 @@ def main():
             files = glob.glob("./*.set")
             files = [file[2:] for file in files]
             if files:
-                cprint("\n".join(files), 'green')
-                new_set = input(colored("?: ", 'yellow'))
+                cprint("\n".join(files), 'cyan')
+                new_set = input(colored("?: ", 'dark_grey'))
                 change_set(new_set)
             else:
                 cprint("You don't have any other sets", 'red')
         elif cmd == "calg":
             if len(algorithms) > 1:
-                cprint("\n".join(algorithms), 'green')
-                new_algorithm = input(colored("?: ", 'yellow'))
+                cprint("\n".join(algorithms), 'cyan')
+                new_algorithm = input(colored("?: ", 'dark_grey'))
                 change_algorithm(new_algorithm)
             else:
                 cprint("You don't have any other algorithms", 'red')
@@ -135,14 +135,14 @@ def main():
         elif cmd == "list":
             # List all flashcards in the current set
             for card in flashcards_data:
-                cprint(f"\nfront: {card[0]}", 'yellow')
-                cprint(f"back: {card[1]}", 'yellow')
+                cprint(f"\nfront: {card[0]}", 'light_grey')
+                cprint(f"back: {card[1]}", 'dark_grey')
             print("")
         else:
             cprint(f"Unknown command: {cmd}", 'red')
 
         current_command = None
-        input(colored("[ enter ]", 'yellow'))
+        input(colored("[ enter ]", 'dark_grey'))
         clear()
 
 clear()
