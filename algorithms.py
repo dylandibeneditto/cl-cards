@@ -9,33 +9,6 @@ params: dict {
 }
 """
 
-"""
-BOILERPLATE ALGORITHM
-
-class Algorithm:
-    def __init__(self):
-        # state variables go here
-    
-    # function which is called on initialization
-    # intended for displaying commands
-    def initialDisplay(self):
-        print("- `exit` | end session")
-        print("[ enter to start ]")
-        
-    # called after logic, to display the next card
-    def display(self, params):
-        # this code will print the front of the current card
-        print(params["currentCard"][0])
-        
-    # called to respond to user input and trigger next card
-    def logic(self, params):
-        
-        next_index = 0
-        
-        # return the next index to be shown (required)
-        return next_index
-"""
-import math
 import random
 import os
 
@@ -68,7 +41,6 @@ class FlashcardsAlgorithm:
         
         return next_index  # Return the index of the next card to show
 
-
 class WrittenAlgorithm:
     def __init__(self):
         self.correct = []  # List to keep track of correctly answered cards
@@ -83,8 +55,8 @@ class WrittenAlgorithm:
         
     def display(self, params):
         # Display the current progress and the front of the card
-        centerSize = os.get_terminal_size().columns - len(f"correctly answered {len(self.correct)}") - len(f"round {self.round}")
-        print(f"correctly answered {len(self.correct)}{(''.center(centerSize))}round {self.round}\n")
+        center_size = os.get_terminal_size().columns - len(f"correctly answered {len(self.correct)}") - len(f"round {self.round}")
+        print(f"correctly answered {len(self.correct)}{(''.center(center_size))}round {self.round}\n")
         print(params['currentCard'][0])
 
         
@@ -97,13 +69,14 @@ class WrittenAlgorithm:
 
     def logic(self, params):
         # Process the user's input and update the state accordingly
-        if params['user_input'] == params['currentCard'][1]:
-            self.correct.append(params['index'])  # Add to correct list if the answer is correct
-            self.displayCheck(params, True)
-        else:
-            self.displayCheck(params, False)
+        if params['user_input'] != "exit":
+            if params['user_input'] == params['currentCard'][1]:
+                self.correct.append(params['index'])  # Add to correct list if the answer is correct
+                self.displayCheck(params, True)
+            else:
+                self.displayCheck(params, False)
+            input("[ enter ]")
             
-        input("[ enter ]")
         
         # Check if all cards have been answered correctly
         if len(self.correct) == len(params['data']):
